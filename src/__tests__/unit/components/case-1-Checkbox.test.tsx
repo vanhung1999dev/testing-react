@@ -1,7 +1,5 @@
 import React from 'react'
-import { axe } from 'jest-axe'
 import { render, fireEvent } from '@testing-library/react'
-
 import Checkbox from '../../../components/Checkbox'
 
 /**
@@ -11,13 +9,43 @@ import Checkbox from '../../../components/Checkbox'
  * should.
  */
 describe('The <Checkbox /> component', () => {
-  it('❌ Should render the label and checkbox the user will see', () => {})
+  const defaultCheckBoxProps = {
+    label: 'Test check box',
+    id: 'Check box id',
+    checked: false,
+    background: '#000', 
+    checkMarkBackground: '#fff',
+    onChange: jest.fn(),
+  }
 
-  it('❌ Should make the checkbox accessible by setting the id and htmlFor attributes on label and checkbox', () => {})
+  it(' Should render the label and checkbox the user will see', () => {
+   const { debug, getByLabelText } = render(
+      <Checkbox {...defaultCheckBoxProps} />,
+    )
+    debug(getByLabelText(defaultCheckBoxProps.label))
+  });
 
-  it('❌ Should call the onChange handler when it is provided', () => {})
+  it('  Should make the checkbox accessible by setting the id and htmlFor attributes on label and checkbox', () => {
+    const { getByLabelText } = render(
+      <Checkbox {...defaultCheckBoxProps} />
+    )
+      expect(getByLabelText(defaultCheckBoxProps.label)).toBeInTheDocument();
+  })
 
-  it('❌ Should change state correctly when clicked (checked and unchecked)', () => {})
+  it('Should call the onChange handler when it is provided', () => {
+    const { getByLabelText } = render(
+      <Checkbox {...defaultCheckBoxProps} />
+    )
 
-  it('❌ should not fail any accessibility tests', async () => {})
+    const checkBox = getByLabelText(defaultCheckBoxProps.label);
+    fireEvent.click(checkBox);
+    expect(defaultCheckBoxProps.onChange).toHaveBeenCalled();
+  })
+
+  it('Should change state correctly when clicked (checked and unchecked)', () => {
+    const { getByLabelText } = render(
+      <Checkbox {...defaultCheckBoxProps} />
+    );
+    expect(getByLabelText(defaultCheckBoxProps.label)).not.toBeChecked();
+  })
 })
